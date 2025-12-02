@@ -40,21 +40,23 @@ const Icons = {
   )
 };
 
+import { useCreator } from '../context/ContextProvider';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useCreator();
 
   const handleLogout = () => {
-    // Clear Educator credentials
-    localStorage.removeItem("educatorToken");
+    logout();
     navigate('/login');
   };
 
   // Helper to determine if link is active
   const isActive = (path) => {
-    return location.pathname === path 
-      ? "text-amber-800 font-bold bg-amber-50 shadow-sm" 
+    return location.pathname === path
+      ? "text-amber-800 font-bold bg-amber-50 shadow-sm"
       : "text-stone-600 hover:text-amber-800 hover:bg-stone-50";
   };
 
@@ -64,7 +66,7 @@ const Navbar = () => {
       <nav className="fixed w-full top-0 z-50 bg-white border-b border-stone-200 shadow-sm transition-all duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            
+
             {/* 1. Logo Section */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-2 group">
@@ -79,22 +81,22 @@ const Navbar = () => {
 
             {/* 2. Desktop Menu */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${isActive('/')}`}
               >
                 <Icons.Layout className="w-4 h-4" />
                 Dashboard
               </Link>
-              
-              <Link 
-                to="/create-course" 
+
+              <Link
+                to="/create-course"
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${isActive('/create-course')}`}
               >
                 <Icons.PlusCircle className="w-4 h-4" />
                 Create Course
               </Link>
-              
+
               {/* Divider */}
               <div className="h-6 w-px bg-stone-300 mx-2"></div>
 
@@ -107,7 +109,7 @@ const Navbar = () => {
                 <div className="w-8 h-8 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-500">
                   <Icons.User className="w-4 h-4" />
                 </div>
-                <button 
+                <button
                   onClick={handleLogout}
                   className="flex items-center gap-2 text-stone-500 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                   title="Sign Out"
@@ -130,20 +132,20 @@ const Navbar = () => {
         </div>
 
         {/* 4. Mobile Dropdown */}
-        <div 
+        <div
           className={`md:hidden bg-white border-b border-stone-200 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}
         >
           <div className="px-4 pt-2 pb-4 space-y-1">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-stone-700 hover:bg-amber-50 hover:text-amber-800"
             >
               <Icons.Layout className="w-5 h-5" />
               Dashboard
             </Link>
-            <Link 
-              to="/create-course" 
+            <Link
+              to="/create-course"
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-stone-700 hover:bg-amber-50 hover:text-amber-800"
             >
@@ -151,7 +153,7 @@ const Navbar = () => {
               Create Course
             </Link>
             <div className="border-t border-stone-100 my-2"></div>
-            <button 
+            <button
               onClick={handleLogout}
               className="flex items-center gap-3 w-full text-left px-3 py-3 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
             >
@@ -165,7 +167,7 @@ const Navbar = () => {
       {/* --- Main Content Area (Outlet) --- */}
       {/* pt-16 ensures content isn't hidden behind fixed navbar */}
       <main className="pt-16 min-h-screen bg-stone-50">
-        <Outlet /> 
+        <Outlet />
       </main>
     </>
   );

@@ -9,7 +9,10 @@ const API_URL = 'http://localhost:5000/api/student';
 export const StudentProvider = ({ children }) => {
   // --- STATE ---
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('studentToken') || null);
+  const [token, setToken] = useState(() => {
+    const t = localStorage.getItem('studentToken');
+    return (t && t !== 'null' && t !== 'undefined') ? t : null;
+  });
   const [courses, setCourses] = useState([]); // Dashboard Courses
   const [activeCourse, setActiveCourse] = useState(null); // Current CourseRoom Data
   const [loading, setLoading] = useState(false);
@@ -114,7 +117,7 @@ export const StudentProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/dashboard`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         signal: fetchDashboardAbortController.current.signal
       });
@@ -163,7 +166,7 @@ export const StudentProvider = ({ children }) => {
 
       // Option B: Fetch specific course if not in dashboard (e.g., direct link)
       const response = await fetch(`${API_URL}/dashboard`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { ...(token ? { 'Authorization': `Bearer ${token}` } : {}) }
       });
       const data = await response.json();
       const specificCourse = data.find(c => c.courseId === courseId || c._id === courseId);
@@ -190,7 +193,7 @@ export const StudentProvider = ({ children }) => {
       const response = await fetch(`${API_URL}/enroll/${courseId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
           'Content-Type': 'application/json'
         }
       });
@@ -230,7 +233,7 @@ export const StudentProvider = ({ children }) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({ courseId, lessonId })
       });
@@ -269,8 +272,8 @@ export const StudentProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/courses`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        },
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        }
       });
 
       const data = await response.json();

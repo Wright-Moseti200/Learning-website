@@ -8,7 +8,10 @@ const API_URL = 'http://localhost:5000/api/educator';
 export const CreatorProvider = ({ children }) => {
   // --- STATE ---
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('educatorToken') || null);
+  const [token, setToken] = useState(() => {
+    const t = localStorage.getItem('educatorToken');
+    return (t && t !== 'null' && t !== 'undefined') ? t : null;
+  });
   const [myCourses, setMyCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
